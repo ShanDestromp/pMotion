@@ -9,6 +9,7 @@ pMotion only requires a PHP capable webserver with read/write access to wherever
 
 * Motion is installed and running locally to the pMotion instance (same machine).
 	* While handling remote installs is a (future) goal it is in the far distance and shouldn't be expected soon.
+	* The above said, it *is* possible to remotely *view* streams from another server, it will take some minor editing to accomplish.
 * A working webserver with PHP separate from the one included with Motion
 	* NGINX is a simple to setup example and is the (primary) one used for development.
 	* A reasonably modern version of PHP is required, with v5.6.30 being the version used for development.  All attempts to maintain portability will be made but straying too far from Linux + php >=5.x will probably result in issues.

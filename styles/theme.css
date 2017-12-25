@@ -9,6 +9,17 @@ a.header {
 	vertical-align: middle;
 	text-decoration: none;
 }
+
+a#settings {
+	background: url("./repairing-service.png") no-repeat;
+
+	width: 32px;
+	height: 32px;
+	text-decoration: none;
+	position: absolute;
+	left: 6px;
+	top: 7px;
+}
 body {
 	background: #000500;
 	color: #92817A;

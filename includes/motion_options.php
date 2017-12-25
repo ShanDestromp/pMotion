@@ -24,6 +24,9 @@ $Motion = array();
 $Motion['max_stored_size'] = ''; # Integer in MegaBytes
 $Motion['max_stored_age'] = ''; # Integer in hours
 $Motion['feed_enabled'] = array('min' => 'off', 'max' => 'on', 'current' => 'on'); # Enables stream
+$Motion['stream_wide'] = array('min' => '1', 'max' => '9', 'current' => '3'); # Number of streams to show wide, default is 3
+#$Motion[''] = '';
+#$Motion[''] = '';
 #$Motion[''] = '';
 
 #################################################
