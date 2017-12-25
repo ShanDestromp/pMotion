@@ -1,2 +1,33 @@
+.header {
+	background: #44001A;
+	color: #92817A;
+	line-height:30px;
+	text-align: right;
+}
 
+a.header {
+	vertical-align: middle;
+	text-decoration: none;
+}
+body {
+	background: #000500;
+	color: #92817A;
+}
 
+a {
+	color: #92817A;
+	text-decoration: underline;
+	display: inline-block;
+}
+
+a:visited {
+	color: #996888;
+}
+
+a:hover {
+	color: #5E4955;
+}
+
+a:active {
+	color: #92817A;
+}
