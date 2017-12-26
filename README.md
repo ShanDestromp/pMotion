@@ -22,4 +22,5 @@ Please note that any security notifications inherent to Motion are applicable he
 
 # Todo
 
-A lot.  Public source (eg from github) is more or less non-functional at this time.  Consider pMotion to be non-working unless otherwise indicated.
+A lot.  Public source (eg from github) is more or less non-functional at this time.  Consider pMotion to be non-working unless otherwise indicated.  For specifics please see [TODO.md](https://github.com/ShanDestromp/pMotion/blob/master/TODO.md)
+
