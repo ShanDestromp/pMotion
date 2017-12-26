@@ -211,6 +211,5 @@ $Motion['track_move_wait'] = array('min' => '0', 'max' => '2147483647', 'current
 $Motion['track_speed'] = array('min' => '0', 'max' => '2147483647', 'current' => '0');
 $Motion['track_stepsize'] = array('min' => '0', 'max' => '2147483647', 'current' => '0');
 
-
 ksort($Motion);
 ?>

@@ -113,7 +113,7 @@ function f_mConfPage ($MoCONF, $CamID){
 							for($y = 0; $y < count($MoCONF[$keys[$i]][$tkeys[$x]]); $y++){
 								if($tkeys[$x] != "current"){
 									echo "<option value=\"".$MoCONF[$keys[$i]]['values'][$y]."\"";
-									if($MoCONF[$keys[$i]]['values'][$y] == $MoCONF[$keys[$i]]['current']){echo " selected>";}
+									if(($MoCONF[$keys[$i]]['values'][$y] == $MoCONF[$keys[$i]]['current']) && isset($MoCONF[$keys[$i]]['current'])){echo " selected>";}
 									else {echo ">";}
 									echo $MoCONF[$keys[$i]]['values'][$y]."</option>\n";
 								}
@@ -122,7 +122,7 @@ function f_mConfPage ($MoCONF, $CamID){
 						else{
 							if($tkeys[$x] != "current"){
 								echo "<option value=\"".$MoCONF[$keys[$i]][$tkeys[$x]]."\"";
-								if($MoCONF[$keys[$i]][$tkeys[$x]] == $MoCONF[$keys[$i]]['current']){echo " selected>";}
+								if((isset($MoCONF[$keys[$i]]['current'])) && ($MoCONF[$keys[$i]][$tkeys[$x]] == $MoCONF[$keys[$i]]['current'])){echo " selected>";}
 								else {echo ">";}
 								echo $MoCONF[$keys[$i]][$tkeys[$x]]."</option>\n";
 							}
