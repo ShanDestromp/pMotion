@@ -3,7 +3,7 @@ if(is_file("./settings.conf.php")){include_once("./settings.conf.php");}
 else{include_once("./settings.sample.conf.php");}
 	
 $Requirements = array(
-					"lang/lang.".$CONF['Lang'].".php",
+					"lang/".$CONF['Lang'],
 					"includes/motion_options.php",
 					"includes/functions.php"
 					);

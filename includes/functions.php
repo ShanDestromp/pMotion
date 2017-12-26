@@ -1,4 +1,16 @@
 <?php
+#################################################
+#################################################
+####  Master 'functions' file.               ####
+####  If we believe a function *might* be    ####
+####  reused anywhere other than a single    ####
+####  page then it belongs in here.          ####
+#################################################
+#################################################
+
+
+
+
 // Parses the master motion.conf file
 // At this point we just put it into an array of it's own
 // We don't bother associating with the "proper" array from motion_options.php yet
@@ -56,18 +68,44 @@ function f_ConfMerge($Motion, $MotionConf){
 	return $Motion;			
 }
 
+#################################################
+#################################################
+####              NOTICE                     ####
+####  This will outright remove existing     ####
+####  data inside the file and REQUIRES      ####
+####  that $Motion[SysProc][camera] ONLY     ####
+####  contains the filenames, not their      ####
+####  associated settings.                   ####
+#################################################
+#################################################
+
+// Writes the configuration file(s)
 function f_ConfWrite ($Settings, $File) {
+	global $CONF;
 	$f = fopen($File, "w");
-	$keys = array_keys($Settings);
 	
-	if($File = "settings.conf.php"){fwrite($f, "<?php\n");}
-	for($i = 0; $i < count($Settings); $i++){
-		if($File = "settings.conf.php"){fwrite($f, "\$CONF['".$keys[$i]."'] = \"".$Settings[$keys[$i]]."\";\n");}
-		else{fwrite($keys[$i]." ". $Settings[$keys[$i]]."\n");}
+	// Only for pMotion settings
+	if($File = "settings.conf.php"){
+		$keys = array_keys($Settings);
+		fwrite($f, "<?php\n");
+	
+		for($i = 0; $i < count($Settings); $i++){fwrite($f, "\$CONF['".$keys[$i]."'] = \"".$Settings[$keys[$i]]."\";\n");}
+		fwrite($f, "?>");
 	}
-	if($File = "settings.conf.php"){fwrite($f, "?>");}
+	else{
+		$cKeys = array_keys($Settings); 
+		for($i = 0; $i < count($cKeys); $i++){
+			$oKeys = array_keys($Settings[$cKeys[$i]]);
+			for($x = 0; $x < count($oKeys); $x++){
+				fwrite($f, $oKeys[$x]." ".$Settings[$cKeys[$i]][$oKeys[$x]]."\n");
+			}
+		}
+	}
 	fclose($f);
+	//echo "<meta http-equiv=\"refresh\" content=\"0\">";
+	//echo "<script>location.reload();</script>";
 }
+
 // Used for scanning a directory and returning specific items
 function f_scanDir($Dir, $Search){
 	
@@ -91,7 +129,7 @@ function f_pMConfPage ($DefCONF){
 	$Lang = f_scanDir('./lang', 'lang');
 	
 	echo "<table id='center'>\n";
-	echo "<form action='./' method='post' >\n";
+	echo "<form action='".$_SERVER['REQUEST_URI']."' method='post'>\n";
 		for ($i = 0; $i < count($DefCONF); $i++){
 		if($keys[$i] == 'Theme' || $keys[$i] == 'Lang'){
 			if($keys[$i] == 'Theme'){$Which = $Themes; $Set = $CONF['Theme'];}
@@ -116,85 +154,25 @@ function f_pMConfPage ($DefCONF){
 /* NEEDS TO BE RE-WRITTEN TO MATCH motion_options.php FORMAT */
 
 function f_mConfPage ($MoCONF, $CamID){
-	if($CamID === 'NONE'){
-		$keys = array_keys($MoCONF);
-		echo "<table id='center'>\n";
-		echo "<form action='./?settings' method='post' >\n";
-			
-		for ($i = 0; $i < count($MoCONF); $i++){
-			
-			echo "\t<tr><td>".$keys[$i]."</td>";
-
-			// Only processing fields which have some form of range
-			if(is_array($MoCONF[$keys[$i]])){
-				// Numericals only here
-				if((isset($MoCONF[$keys[$i]]['max'])) && (is_numeric($MoCONF[$keys[$i]]['max']) && is_numeric($MoCONF[$keys[$i]]['min']))){
-					// More than 50 options get special options
-					if(($MoCONF[$keys[$i]]['max'] - $MoCONF[$keys[$i]]['min']) >= 50)
-					{
-						// Very large numbers get a text box
-						if(($MoCONF[$keys[$i]]['max'] - $MoCONF[$keys[$i]]['min']) > 9999){
-							echo "<td><input type=\"number\" value=\"".$MoCONF[$keys[$i]]['current']."\" name='settings[".$keys[$i]."]' onkeypress='return event.charCode >= 48 && event.charCode <= 57'></td>";
-						}
-						// Smaller numbers get a slider
-						else {
-							echo "<td><input type=\"range\" min=\"".$MoCONF[$keys[$i]]['min']."\" max=\"".$MoCONF[$keys[$i]]['max']."\" value=\"".$MoCONF[$keys[$i]]['current']."\" id=\"".$keys[$i]."InputID\" name='settings[".$keys[$i]."]' oninput=\"".$keys[$i]."OutputID.value = ".$keys[$i]."InputID.value\">";
-							echo "<output name=\"".$keys[$i]."OutputName\" id=\"".$keys[$i]."OutputID\">".$MoCONF[$keys[$i]]['current']."</output></td>";
-						}
-					}
-					// Dropdowns
-					else {
-						echo "<td><select name='settings[".$keys[$i]."]'>\n";
-						for ($x = $MoCONF[$keys[$i]]['min']; $x <= $MoCONF[$keys[$i]]['max']; $x++){
-							echo "<option value=\"".$MoCONF[$keys[$i]]['current']."\"";
-							if($x == $MoCONF[$keys[$i]]['current']){echo " selected>";}
-							else {echo ">";}
-							echo $x."</option>\n";
-						}
-						echo "</td>\n";
-					}
-				}
-				// Other arrays
-				else{
-					$tkeys = array_keys($MoCONF[$keys[$i]]);
-					//print_r($tkeys); # Debugging
-					echo "<td><select name='settings[".$keys[$i]."]'>\n";
-
-					for ($x = 0; $x < count($tkeys); $x++){
-						if(is_array($MoCONF[$keys[$i]][$tkeys[$x]])){
-							for($y = 0; $y < count($MoCONF[$keys[$i]][$tkeys[$x]]); $y++){
-								if($tkeys[$x] != "current"){
-									echo "<option value=\"".$MoCONF[$keys[$i]]['values'][$y]."\"";
-									if(($MoCONF[$keys[$i]]['values'][$y] == $MoCONF[$keys[$i]]['current']) && isset($MoCONF[$keys[$i]]['current'])){echo " selected>";}
-									else {echo ">";}
-									echo $MoCONF[$keys[$i]]['values'][$y]."</option>\n";
-								}
-							}
-						}
-						else{
-							if($tkeys[$x] != "current"){
-								echo "<option value=\"".$MoCONF[$keys[$i]][$tkeys[$x]]."\"";
-								if((isset($MoCONF[$keys[$i]]['current'])) && ($MoCONF[$keys[$i]][$tkeys[$x]] == $MoCONF[$keys[$i]]['current'])){echo " selected>";}
-								else {echo ">";}
-								echo $MoCONF[$keys[$i]][$tkeys[$x]]."</option>\n";
-							}
-						}
-					}
-
-					echo "</select></td>\n";
-				}
-			}
-			// Everything not in an array (string, INT etc)
-			else{
-				echo "\t<td><input type='text' name='settings[".$keys[$i]."]' value='".$MoCONF[$keys[$i]]."'/></td></tr>\n";
-			}
-			echo "</tr>\n";
-		}
-		echo "\t<tr colspan='2' align='center'><td><input type='submit' value='Submit' /></td></tr>\n";
-		echo "</form></table>\n";
+	global $CONF;
+	if($CamID != "NONE"){
 	}
 	else{
-		echo "<form action='./?settings&CameraID=".$CamID."' method='post' >\n";
+		$EnabledCameras = array();
+		// Need to pull in our camera configurations
+		global $CameraConf;
+		//print_r($CameraConf['enabled_feeds']); # Debugging
+		$tCameras = $MoCONF['SysProc']['camera']; // "Old" list of enabled cameras
+		//print_r($tCameras); # Debugging
+		
+		// Select only enabled cameras
+		for ($i = 0; $i < count($tCameras); $i++){ if($CameraConf['enabled_feeds'][$tCameras[$i]] == 'on'){$EnabledCameras[] = $tCameras[$i];}}
+		//print_r($EnabledCameras); # Debugging
+		
+		//Over-ride previous camera list with the new one
+		$MoCONF['SysProc']['camera'] = $EnabledCameras;
+		//print_r($MoCONF['SysProc']['camera']);
 	}
+	
 }
 ?>

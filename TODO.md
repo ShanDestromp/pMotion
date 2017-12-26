@@ -7,7 +7,7 @@ In order of importance (mostly)
 - [ ] Edit `camera#.conf` (in progress`)
 - [ ] Manage historical footage / stills
 - [ ] `daemon` style monitor (runs in background without needing page open)
-- [ ] Neptune
+- [ ] Neptune (this is what I get for copy-pasta and pushing a commit, I now owe a planet)
 - [ ] Beautification / styling
 - [x] Theme support (limited to just changing which stylesheet is used)
 - [ ] Multi-Language support
