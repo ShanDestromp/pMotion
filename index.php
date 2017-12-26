@@ -3,7 +3,7 @@ if(is_file("./settings.conf.php")){include_once("./settings.conf.php");}
 else{include_once("./settings.sample.conf.php");}
 	
 $Requirements = array(
-					"includes/lang.".$CONF['Lang'].".php",
+					"lang/lang.".$CONF['Lang'].".php",
 					"includes/motion_options.php",
 					"includes/functions.php"
 					);
@@ -12,6 +12,11 @@ for ($i = 0; $i < count($Requirements); $i++){
 	if (!include_once($Requirements[$i])){exit ('ERROR:  Failed to access '.$Requirements[$i].', please check installation.');}
 }
 
+$PageTitle = '';
+if(isset($_GET)){
+	$keys = array_keys($_GET);
+	for($i = 0; $i < count($keys); $i++){$PageTitle = $PageTitle.$keys[$i]." => "; $PageTitle = strtoupper($PageTitle);}
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,7 +26,7 @@ for ($i = 0; $i < count($Requirements); $i++){
 </head>
 <body>
 <div class="header">
-	
+	<div class='title'><?php echo $PageTitle;?></div>
 	<a href='./?' class='header'>pMotion v<?php echo $LANG['version'];?></a>
 </div>
 <a href='./?settings' id='settings'>&nbsp;</a>
@@ -31,26 +36,31 @@ if(is_file("./settings.conf.php")){
 	if($CONF['hostname'] == ""){$CONF['hostname'] = "localhost";}
 
 	$MotionConf = f_MotionConf($CONF['MotionFolder'], $CONF['MotionConf']);
+	//print_r($MotionConf); # Debugging
 
+	$Motion = f_ConfMerge($Motion, $MotionConf); // # Over-rides defaults with those from $CONF['MotionConf']
+	//print_r($Motion); # Debugging
+	
+	
 	//Detected at least one camera configuration, load it and any others
-	if($MotionConf['camera']['0'] != ""){
+	if($Motion['SysProc']['camera']['0'] != ""){
 			$CameraConf = array();
-			for($i = 0; $i < count($MotionConf['camera']); $i++){
-					$CameraConf[$MotionConf['camera'][$i]] = f_MotionConf($CONF['MotionFolder'], $MotionConf['camera'][$i]);
-					if($CameraConf[$MotionConf['camera'][$i]]['feed_enabled'] == "on"){$CameraConf['enabled_feeds'][$MotionConf['camera'][$i]] = 'on';}
-					else{$CameraConf['enabled_feeds'][$MotionConf['camera'][$i]] = 'off';}
+			for($i = 0; $i < count($Motion['SysProc']['camera']); $i++){
+					$CameraConf[$Motion['SysProc']['camera'][$i]] = f_MotionConf($CONF['MotionFolder'], $Motion['SysProc']['camera'][$i]);
+					if($CameraConf[$Motion['SysProc']['camera'][$i]]['feed_enabled'] == "on"){$CameraConf['enabled_feeds'][$Motion['SysProc']['camera'][$i]] = 'on';}
+					else{$CameraConf['enabled_feeds'][$Motion['SysProc']['camera'][$i]] = 'off';}
 			}
 	}
 	else{exit($LANG['NoCam']);}
-
-	$Motion = f_ConfMerge($Motion, $MotionConf); // # Over-rides defaults with those from $CONF['MotionConf']
+	
+	//print_r($CameraConf); # Debugging
 	
 	if(isset($_GET['settings'])){include_once("./includes/settings.php");}
 	elseif(isset($_GET['history'])){include_once("./includes/history.php");}
 
 	// Default page, showing all enabled streams
 	else{
-		print_r($Motion); # Debugging
+		//print_r($Motion); # Debugging
 		
 		// Counting enabled feeds to make sure it's > stream_wide
 		$x = 0;
