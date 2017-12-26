@@ -13,6 +13,8 @@ for ($i = 0; $i < count($Requirements); $i++){
 }
 
 ?>
+<!DOCTYPE html>
+<html>
 <head>
 <title>pMotion v<?php echo $LANG['version'];?></title>
 <link href="./styles/<?php echo $CONF['Theme'];?>" rel="stylesheet" />
@@ -42,12 +44,14 @@ if(is_file("./settings.conf.php")){
 	else{exit($LANG['NoCam']);}
 
 	$Motion = f_ConfMerge($Motion, $MotionConf); // # Over-rides defaults with those from $CONF['MotionConf']
-
+	
 	if(isset($_GET['settings'])){include_once("./includes/settings.php");}
 	elseif(isset($_GET['history'])){include_once("./includes/history.php");}
 
 	// Default page, showing all enabled streams
 	else{
+		print_r($Motion); # Debugging
+		
 		// Counting enabled feeds to make sure it's > stream_wide
 		$x = 0;
 		$keys = array_keys($CameraConf['enabled_feeds']);
@@ -62,7 +66,7 @@ if(is_file("./settings.conf.php")){
 		for ($i = 0; $i < count($CameraConf['enabled_feeds']); $i++){
 			if($CameraConf['enabled_feeds'][$keys[$i]] == "on"){
 				$x++;
-				echo "<img src=\"http://".$CONF['hostname'].":".$CameraConf[$keys[$i]]['stream_port']."\" border=\"0\" width=\"".$y."%\" />";
+				echo "<img src=\"http://".$CONF['hostname'].":".$CameraConf[$keys[$i]]['stream_port']."\" style=\"width:".$y."%;\" />";
 			
 				#echo "<video width=\"".$y."%\">";
 				#echo "<source src=\"http://".$CONF['hostname'].":".$CameraConf[$keys[$i]]['stream_port']."/stream.mjpg\" />";
@@ -75,3 +79,4 @@ if(is_file("./settings.conf.php")){
 else{if(!require("./includes/setup.php")){exit ("ERROR:  Failed to access configuration files, please check installation");}}
 ?>
 </body>
+</html>

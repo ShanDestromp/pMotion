@@ -45,7 +45,7 @@ $Motion['logfile'] = ''; #String
 $Motion['log_level'] = array('min' => '1', 'max' => '9', 'current' => '6');
 $Motion['log_type'] = array('values' => array("COR", "STR", "ENC", "NET", "DBL", "EVT", "TRK", "ALL"), "current" => "ALL");
 $Motion['camera'] = ''; #String
-$Motion['camera_id'] = array('min' => '0', 'max' => '999', 'current' => 'off');
+$Motion['camera_id'] = ''; # Integer
 $Motion['camera_name'] = ''; #String
 $Motion['camera_dir'] = ''; #String
 

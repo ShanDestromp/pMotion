@@ -11,7 +11,7 @@
 if(is_file("./settings.sample.conf.php")){
 	@include_once("./settings.sample.conf.php");
 	@include_once("./includes/functions.php");
-	if(isset($_POST['settings'])){f_pMConfWrite($_POST['settings']);}
+	if(isset($_POST['settings'])){f_ConfWrite($_POST['settings'], "./settings.conf.php");}
 	else{f_pMConfPage($CONF);}	
 }
 else{exit ('ERROR:  Default settings missing, unable to continue.');}
